@@ -9,7 +9,7 @@ export const apiSlice = createApi({
     prepareHeaders: (headers) => {
       const accessToken = Cookies.get("accessToken");
       const refreshToken = Cookies.get("refreshToken");
-
+    
       if (accessToken) {
         headers.set("access-token", accessToken);
       }
