@@ -8,8 +8,7 @@ import 'react-native-reanimated';
 import { store } from './../redux/store';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Provider } from 'react-redux';
-import { CounterComponent } from '@/components/CounterComponent';
-import CourseComponent from '@/components/CourseComponent';
+
 
 
 
@@ -39,8 +38,6 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
-      <CourseComponent/>
-      <CounterComponent/>
       <StatusBar style="auto" />
     </ThemeProvider>
     </Provider>
