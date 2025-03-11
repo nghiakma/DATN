@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import OnboardingScreen from '@/screen/onboarding/onboarding.screen'
 
-export default function index() {
+export default function OnboardingScreen() {
   return (
-    <OnboardingScreen/>
+    <View>
+      <Text>OnboardingScreen</Text>
+    </View>
   )
 }
 
