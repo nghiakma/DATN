@@ -1,11 +1,11 @@
 import { Dimensions, Image } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
 //@ts-ignore
-import OneBoarding from "@/assets/images/onboarding/1.png";
+import One from "@/assets/images/onboarding/1.png";
 //@ts-ignore
-import TwoBoarding from "@/assets/images/onboarding/2.png";
+import Two from "@/assets/images/onboarding/2.png";
 //@ts-ignore
-import ThreeBoarding from "@/assets/images/onboarding/3.png";
+import Three from "@/assets/images/onboarding/3.png";
 
 
 
@@ -15,7 +15,7 @@ export const onBoardingSlides: onBoardingSlidesTypes[] = [
       title: "Khám phá",
       image: (
         <Image
-          source={OneBoarding}
+          source={One}
           style={{
             width:  verticalScale(320),
             height: verticalScale(330),
@@ -31,7 +31,7 @@ export const onBoardingSlides: onBoardingSlidesTypes[] = [
       title: "Đặt mục tiêu",
       image: (
         <Image
-          source={TwoBoarding}
+          source={Two}
           style={{
             width:  scale(320),
             height: verticalScale(330),
@@ -46,7 +46,7 @@ export const onBoardingSlides: onBoardingSlidesTypes[] = [
       color: "#FFC0CB",
       image: (
         <Image
-          source={ThreeBoarding}
+          source={Three}
           style={{
             width:  scale(320),
             height: verticalScale(330),
