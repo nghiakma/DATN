@@ -59,3 +59,20 @@ export const onBoardingSlides: onBoardingSlidesTypes[] = [
         "Đạt được chứng chỉ bằng cách hoàn thành các khóa học với nỗ lực cống hiến",
     },
   ];
+
+//Snap points: Là những điểm mà nội dung sẽ "dính" hoặc "gắn" vào khi được di chuyển hoặc vuốt. Các điểm snap này được xác định cho cả hai hướng trái và phải.
+// Side Enum: Enum Side có thể dùng để xác định hướng di chuyển của nội dung (trái, phải hoặc không có).
+// Lề và Khoảng Cách: Các hằng số như MIN_LEDGE, MARGIN_WIDTH giúp xác định khoảng cách giữa các phần tử và các cạnh của màn hình.
+
+export enum Side {
+    LEFT,
+    RIGHT,
+    NONE,
+  }
+export const MIN_LEDGE = 25;
+export const { width: WIDTH, height: HEIGHT } = Dimensions.get("screen");
+export const MARGIN_WIDTH = MIN_LEDGE + 50;
+export const PREV = WIDTH;
+export const NEXT = 0;
+export const LEFT_SNAP_POINTS = [MARGIN_WIDTH, PREV];
+export const RIGHT_SNAP_POINTS = [NEXT, WIDTH - MARGIN_WIDTH];
