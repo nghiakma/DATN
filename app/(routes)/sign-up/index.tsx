@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import SignUpScreen from '@/screen/auth/sign-up.screen'
 
 export default function index() {
   return (
-    <View>
-      <Text>index</Text>
-    </View>
+    <SignUpScreen/>
   )
 }
 

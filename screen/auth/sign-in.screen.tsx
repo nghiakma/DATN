@@ -238,7 +238,7 @@ export default function SignInScreen() {
                                 </View>
                             )}
                             <TouchableOpacity
-                                onPress={() => router.push({ pathname: "/forget-password" })}
+                                onPress={() => router.replace({ pathname: "/forget-password" })}
                             >
                                 <Text
                                     style={styles.forgotSection}
@@ -270,7 +270,7 @@ export default function SignInScreen() {
                                     Không có tài khoản?
                                 </Text>
                                 <TouchableOpacity
-                                    onPress={() => router.push({ pathname: "/sign-up" })}
+                                    onPress={() => router.replace({ pathname: "/sign-up" })}
                                 >
                                     <Text
                                         style={{
