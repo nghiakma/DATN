@@ -5,14 +5,14 @@ import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, Touc
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignInImage from "../../assets/images/sign-in/sign-in.png";
 import { Entypo, Fontisto, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
-import { commonStyles } from "@/styles/common/common.styles";
+import { commonStyles } from "../../common/styles";
 import { useState } from "react";
 import { router, useRouter } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Toast } from "react-native-toast-notifications";
 import { URL_SERVER } from "@/utils/url";
-import { fetch } from 'react-native-ssl-pinning';
+
 
 const styles = StyleSheet.create({
     signInImage: {
