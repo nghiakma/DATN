@@ -238,7 +238,10 @@ export default function SignInScreen() {
                                 </View>
                             )}
                             <TouchableOpacity
-                                onPress={() => router.replace({ pathname: "/forget-password" })}
+                               onPress={() => {
+                                
+                                    router.push("/forget-password"); // Nếu 
+                            }}
                             >
                                 <Text
                                     style={styles.forgotSection}

@@ -12,6 +12,8 @@ import { Toast } from "react-native-toast-notifications";
 import axios from "axios";
 import { URL_SERVER } from "@/utils/url";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Animated, { FadeIn, FadeInUp, FadeOut, SlideInLeft, SlideInRight,useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
 
 const styles = StyleSheet.create({
     signInImage: {
@@ -62,6 +64,13 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginBottom: 20,
         marginTop: 20,
+    },
+    button: {
+        padding: 16,
+        borderRadius: 12,
+        marginHorizontal: 16,
+        marginTop: 20,
+        overflow: "hidden",
     },
 });
 
@@ -170,15 +179,19 @@ const SignUpScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView style={{ flex: 1 }}>
-                <Image
+                <Animated.Image
                     style={styles.signInImage}
                     source={SignUpImage}
+                    entering={FadeIn.duration(1000)}
                 />
-                <Text style={[styles.welcomeText, { fontFamily: "Raleway_700Bold" }]}>
+                <Animated.Text 
+                    style={[styles.welcomeText, { fontFamily: "Raleway_700Bold" }]}
+                    entering={FadeInUp.duration(1000).delay(600)}>
                     Bắt đầu đăng ký nào!
-                </Text>
-                <View style={styles.inputContainer}>
-                    <View>
+                </Animated.Text>
+                <View 
+                     style={styles.inputContainer}>
+                    <Animated.View entering={FadeInUp.duration(1000).delay(600)}>
                         <TextInput
                             style={[styles.input, { paddingLeft: 40, marginBottom: 12 }]}
                             keyboardType="default"
@@ -192,8 +205,8 @@ const SignUpScreen = () => {
                             size={20}
                             color={"#A1A1A1"}
                         />
-                    </View>
-                    <View>
+                    </Animated.View >
+                    <Animated.View entering={FadeInUp.duration(1000).delay(600)}>
                         <TextInput
                             style={[styles.input, { paddingLeft: 40 }]}
                             keyboardType="email-address"
@@ -215,8 +228,8 @@ const SignUpScreen = () => {
                                 </Text>
                             </View>
                         )}
-                    </View>
-                    <View style={{ marginTop: 15 }}>
+                    </Animated.View>
+                    <Animated.View entering={FadeInUp.duration(1000).delay(600)} style={{ marginTop: 15 }}>
                         <TextInput
                             style={commonStyles.input}
                             keyboardType="default"
@@ -254,17 +267,16 @@ const SignUpScreen = () => {
                                 </Text>
                             </View>
                         )}
-                    </View>
+                    </Animated.View>
+                      <Animated.View entering={SlideInLeft.duration(1000).delay(1000)}>
                     <TouchableOpacity
-                        style={{
-                            padding: 16,
-                            borderRadius: 8,
-                            marginHorizontal: 16,
-                            backgroundColor: "#2467EC",
-                            marginTop: 15,
-                        }}
+                        style={styles.button}
                         onPress={() => OnHandleSignUp()}
                     >
+                         <LinearGradient
+                                                                colors={["#2467EC", "#1E4E9E"]}
+                                                                style={{ padding: 16, borderRadius: 12 }}
+                                                            >
                         {buttonSpinner ? (
                             <ActivityIndicator size="small" color={"white"} />
                         ) : (
@@ -279,8 +291,10 @@ const SignUpScreen = () => {
                                 Đăng ký
                             </Text>
                         )}
+                        </LinearGradient>
                     </TouchableOpacity>
-                    <View style={styles.signupRedirect}>
+                    </Animated.View>
+                    <Animated.View entering={FadeInUp.duration(1000).delay(600)} style={styles.signupRedirect}>
                         <Text style={{ fontSize: 18, fontFamily: "Raleway_600SemiBold" }}>
                             Đã có tài khoản?
                         </Text>
@@ -296,7 +310,7 @@ const SignUpScreen = () => {
                                 Đăng nhập
                             </Text>
                         </TouchableOpacity>
-                    </View>
+                    </Animated.View>
                 </View>
             </ScrollView>
         </SafeAreaView>
