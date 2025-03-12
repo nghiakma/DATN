@@ -2,6 +2,13 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { useEffect, useState } from 'react';
+import {
+  Poppins_600SemiBold,
+  Poppins_300Light,
+  Poppins_700Bold,
+  Poppins_400Regular,
+  Poppins_500Medium,
+} from '@expo-google-fonts/poppins';
 import 'react-native-reanimated';
 import { LogBox, View } from 'react-native';
 import { ThemeProvider } from '../context/theme.context';
@@ -49,6 +56,14 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loaded] = useFonts({
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    Poppins_600SemiBold,
+    Poppins_300Light,
+    Poppins_700Bold,
+    Poppins_400Regular,
+    Poppins_500Medium,
+  });
   return (
     <Provider store={store}>
      <ThemeProvider>

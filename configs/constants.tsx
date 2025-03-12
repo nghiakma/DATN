@@ -1,11 +1,11 @@
 import { Dimensions, Image } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
 //@ts-ignore
-import One from "@/assets/images/onboarding/1.png";
+import One from "../assets/images/onboarding/character-1.png";
 //@ts-ignore
-import Two from "@/assets/images/onboarding/2.png";
+import Two from "../assets/images/onboarding/character-2.png";
 //@ts-ignore
-import Three from "@/assets/images/onboarding/3.png";
+import Three from "../assets/images/onboarding/character-3.png";
 
 
 
@@ -22,7 +22,7 @@ export const onBoardingSlides: onBoardingSlidesTypes[] = [
           }}
         />
       ),
-      secondTitle: "Cộng đồng của chúng tôi",
+      secondTitle: "cộng đồng tri thức",
       subTitle:
         "Tìm khóa học phù hợp để nâng cao triển vọng nghề nghiệp và kỹ năng của bạn",
     },
