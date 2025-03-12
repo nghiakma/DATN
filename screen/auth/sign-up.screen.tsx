@@ -14,6 +14,7 @@ import { URL_SERVER } from "@/utils/url";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Animated, { FadeIn, FadeInUp, FadeOut, SlideInLeft, SlideInRight,useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRegisterMutation } from "@/redux/auth/authApi";
 
 const styles = StyleSheet.create({
     signInImage: {
@@ -87,6 +88,7 @@ const SignUpScreen = () => {
         email: "",
         password: ""
     });
+     const [register] = useRegisterMutation();
 
     let [fontsLoaded, fontsError] = useFonts({
         Raleway_600SemiBold,
@@ -156,16 +158,15 @@ const SignUpScreen = () => {
             let isValidEmail = handleEmailValidation(email);
             let isValidPassword = handlePasswordValidation(password);
             if (isValidEmail && isValidPassword) {
-                const response = await axios.post(`${URL_SERVER}/registration`, {
-                    name: name,
-                    email: email,
-                    password: password
-                });
-
-                await AsyncStorage.setItem("activation_token", response.data.activationToken);
-                Toast.show(response.data.message, {
-                    type: 'success'
-                });
+                const response = await register({name, email, password });
+                console.log(response);
+                if (response.data) {
+                    await AsyncStorage.setItem("activation_token", response.data.activationToken);
+                    Toast.show(response.data.message, {
+                        type: 'success'
+                    });
+                }
+               
                 setUserInfo({ ...userInfo, name: "", email: "", password: "" });
                 router.replace({ pathname: "/verify-account" });
             }
