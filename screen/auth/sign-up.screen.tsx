@@ -19,13 +19,14 @@ import { useRegisterMutation } from "@/redux/auth/authApi";
 const styles = StyleSheet.create({
     signInImage: {
         width: "60%",
-        height: 250,
+        height: 300,
         alignSelf: "center",
         marginTop: 50,
     },
     welcomeText: {
         textAlign: "center",
         fontSize: 24,
+        marginTop: 20,
     },
    
     inputContainer: {
