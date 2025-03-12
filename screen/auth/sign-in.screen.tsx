@@ -1,36 +1,27 @@
-import { Nunito_400Regular, Nunito_500Medium, Nunito_600SemiBold, Nunito_700Bold } from "@expo-google-fonts/nunito";
-import { Raleway_600SemiBold, Raleway_700Bold } from "@expo-google-fonts/raleway";
-import { useFonts } from "expo-font";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SignInImage from "../../assets/images/sign-in/sign-in.png";
+import SignInImage from "../../assets/images/onboarding/1.png";
 import { Entypo, Fontisto, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import { commonStyles } from "../../common/styles";
-import { useState } from "react";
-import { router, useRouter } from "expo-router";
+import { router } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Toast } from "react-native-toast-notifications";
 import { URL_SERVER } from "@/utils/url";
-
-
+import Animated, { FadeIn, FadeInUp, FadeOut, SlideInLeft, SlideInRight,useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
+import { useLoginMutation
+ } from "@/redux/auth/authApi";
+ 
 const styles = StyleSheet.create({
     signInImage: {
         width: "60%",
-        height: 250,
+        height: 300,
         alignSelf: "center",
-        marginTop: 50,
+        marginTop: 60,
     },
-    welcomeText: {
-        textAlign: "center",
-        fontSize: 24,
-    },
-    learningText: {
-        textAlign: "center",
-        color: "#575757",
-        fontSize: 15,
-        marginTop: 5,
-    },
+   
     inputContainer: {
         marginHorizontal: 16,
         marginTop: 30,
@@ -39,11 +30,12 @@ const styles = StyleSheet.create({
     input: {
         height: 55,
         marginHorizontal: 16,
-        borderRadius: 8,
-        paddingLeft: 35,
+        borderRadius: 12,
+        paddingLeft: 40,
         fontSize: 16,
-        backgroundColor: "white",
-        color: "#A1A1A1",
+        backgroundColor: "#f0f0f0",
+        color: "#333",
+        fontFamily: "Nunito_500Medium",
     },
     visibleIcon: {
         position: "absolute",
@@ -61,6 +53,8 @@ const styles = StyleSheet.create({
         textAlign: "right",
         fontSize: 16,
         marginTop: 10,
+        color: "#2467EC",
+        fontFamily: "Nunito_600SemiBold",
     },
     signUpRedirect: {
         flexDirection: "row",
@@ -69,10 +63,22 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginTop: 20,
     },
+    button: {
+        padding: 16,
+        borderRadius: 12,
+        marginHorizontal: 16,
+        marginTop: 20,
+        overflow: "hidden",
+    },
+    buttonText: {
+        color: "#fff",
+        textAlign: "center",
+        fontSize: 18,
+        fontFamily: "Raleway_700Bold",
+    },
 });
 
-const SignInScreen = () => {
-    const router = useRouter();
+export default function SignInScreen() {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [buttonSpinner, setButtonSpinner] = useState(false);
     const [userInfo, setUserInfo] = useState({
@@ -82,7 +88,13 @@ const SignInScreen = () => {
     const [required, setRequired] = useState("");
     const [error, setError] = useState({
         password: ""
-    })
+    });
+    // Sử dụng hook useLoginMutation từ authApi
+    const [login] = useLoginMutation();
+
+    const opacity = useSharedValue(1);
+    const scale = useSharedValue(1);
+    const rotate = useSharedValue("0deg");
 
     const handlePasswordValidation = (value: string) => {
         const password = value;
@@ -99,7 +111,7 @@ const SignInScreen = () => {
         } else if (!passwordThreeValue.test(password)) {
             setError({
                 ...error,
-                password: "Mật khẩu phải có độ dài 3 ký tự trở lên"
+                password: "Mật khẩu phải có độ dài 6 ký tự trở lên"
             });
             setUserInfo({ ...userInfo, password: "" });
             return false;
@@ -118,42 +130,16 @@ const SignInScreen = () => {
         try {
             let { email, password } = userInfo;
             if (isValid) {
-                const response = await axios.post(`${URL_SERVER}/login`, {
-                    email: email,
-                    password: password
-                });
-             
-                await AsyncStorage.setItem("activation_login_token", response.data.activationToken);
-                 // Tạo body dữ liệu cho POST request
-            // const body = JSON.stringify({
-            //     email: email,
-            //     password: password
-            // });
-
-            // // Gửi yêu cầu với fetch và SSL Pinning
-            // const response = await fetch(`${URL_SERVER}/login`, {
-            //     method: "POST",
-            //     timeoutInterval: 5000,  // Thời gian timeout 5 giây
-            //     body: body,
-            //     sslPinning: {
-            //         certs: ["cer"],  // Tên chứng chỉ đã thêm vào thư mục assets
-            //     },
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'Accept': 'application/json; charset=utf-8',
-            //         'Access-Control-Allow-Origin': '*',
-            //         'e_platform': 'mobile',
-            //     }
-            // });
-
-            // // Kiểm tra phản hồi và xử lý
-            // const data = await response.json();
-                Toast.show(response.data.message, {
-                    type: 'success'
-                });
-
-                router.push({ pathname: "/logincode/index" });
-                // router.push("/(tabs)");
+                const response = await login({ email, password }).unwrap();
+                console.log(response);
+                
+                opacity.value = withTiming(0, { duration: 500 });
+               scale.value = withTiming(0.8, { duration: 500 });
+               rotate.value = withTiming("-10deg", { duration: 500 }, () => {
+            // Khi animation hoàn thành, chuyển trang
+            runOnJS(router.push)("/home-screen");
+        });
+            
             }
         } catch (error) {
             console.log(error);
@@ -165,166 +151,143 @@ const SignInScreen = () => {
         }
     }
 
-    let [fontsLoaded, fontsError] = useFonts({
-        Raleway_600SemiBold,
-        Raleway_700Bold,
-        Nunito_400Regular,
-        Nunito_500Medium,
-        Nunito_700Bold,
-        Nunito_600SemiBold,
-    });
-
-    if (!fontsLoaded && !fontsError) {
-        return null;
-    }
-
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <ScrollView style={{ flex: 1 }}>
-                <Image
-                    style={styles.signInImage}
-                    source={SignInImage}
-                />
-                <Text style={[styles.welcomeText, { fontFamily: "Raleway_700Bold" }]}>
-                    Xìn chào!
-                </Text>
-                <Text style={styles.learningText}>
-                    Đăng nhập vào tài khoản của bạn tại ứng dụng
-                </Text>
-                <View style={styles.inputContainer}>
-                    <View>
-                        <TextInput
-                            style={[styles.input, { paddingLeft: 40 }]}
-                            keyboardType="email-address"
-                            placeholder="Nhập địa chỉ email"
-                            value={userInfo.email}
-                            onChangeText={(v) => setUserInfo({ ...userInfo, email: v })}
-                        />
-                        <Fontisto
-                            style={{ position: "absolute", left: 26, top: 17.6 }}
-                            name="email"
-                            size={20}
-                            color={"#A1A1A1"}
-                        />
-                        {
-                            required && (
-                                <View style={commonStyles.errorContainer}>
-                                    <Entypo name="cross" size={18} color={"red"} />
-                                </View>
-                            )
-                        }
-                    </View>
-                    <View>
-                        <View style={{ marginTop: 15 }}>
+        <LinearGradient
+            colors={["#ffffff", "#f0f0f0"]}
+            style={{ flex: 1 }}
+        >
+            <SafeAreaView style={{ flex: 1 }}>
+                <ScrollView style={{ flex: 1 }}>
+                    <Animated.Image
+                        style={styles.signInImage}
+                        source={SignInImage}
+                        entering={FadeIn.duration(1000)}
+                    />
+                    <View style={styles.inputContainer}>
+                        <Animated.View entering={FadeInUp.duration(1000).delay(600)}>
                             <TextInput
-                                style={commonStyles.input}
-                                keyboardType="default"
-                                secureTextEntry={!isPasswordVisible}
-                                defaultValue=""
-                                placeholder="**********"
-                                value={userInfo.password}
-                                onChangeText={(v) => setUserInfo({ ...userInfo, password: v })}
+                                style={styles.input}
+                                keyboardType="email-address"
+                                placeholder="Nhập địa chỉ email"
+                                placeholderTextColor="#888"
+                                value={userInfo.email}
+                                onChangeText={(v) => setUserInfo({ ...userInfo, email: v })}
                             />
-                            <TouchableOpacity
-                                style={styles.visibleIcon}
-                                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                            >
-                                {
-                                    isPasswordVisible ?
-                                        (
-                                            <Ionicons
-                                                name="eye-off-outline"
-                                                size={23}
-                                                color={"#747474"}
-                                            />
-                                        )
-                                        :
-                                        (
-                                            <Ionicons
-                                                name="eye-outline"
-                                                size={23}
-                                                color={"#747474"}
-                                            />
-                                        )
-
-                                }
-                            </TouchableOpacity>
-                            <SimpleLineIcons
-                                style={styles.icon2}
-                                name="lock"
+                            <Fontisto
+                                style={{ position: "absolute", left: 26, top: 17.6 }}
+                                name="email"
                                 size={20}
-                                color={"#A1A1A1"}
+                                color={"#888"}
                             />
-                        </View>
-                        {error.password !== '' && (
-                            <View style={[commonStyles.errorContainer, { top: 82 }]}>
-                                <Entypo name="cross" size={18} color={"red"} />
-                                <Text style={{ color: "red", fontSize: 11, marginTop: -1 }}>
-                                    {error.password}
-                                </Text>
+                            {
+                                required && (
+                                    <View style={commonStyles.errorContainer}>
+                                        <Entypo name="cross" size={18} color={"red"} />
+                                    </View>
+                                )
+                            }
+                        </Animated.View>
+                        <Animated.View entering={FadeInUp.duration(1000).delay(800)}>
+                            <View style={{ marginTop: 15 }}>
+                                <TextInput
+                                    style={styles.input}
+                                    keyboardType="default"
+                                    secureTextEntry={!isPasswordVisible}
+                                    placeholder="**********"
+                                    placeholderTextColor="#888"
+                                    value={userInfo.password}
+                                    onChangeText={(v) => setUserInfo({ ...userInfo, password: v })}
+                                />
+                                <TouchableOpacity
+                                    style={styles.visibleIcon}
+                                    onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                                >
+                                    {
+                                        isPasswordVisible ?
+                                            (
+                                                <Ionicons
+                                                    name="eye-off-outline"
+                                                    size={23}
+                                                    color={"#888"}
+                                                />
+                                            )
+                                            :
+                                            (
+                                                <Ionicons
+                                                    name="eye-outline"
+                                                    size={23}
+                                                    color={"#888"}
+                                                />
+                                            )
+
+                                    }
+                                </TouchableOpacity>
+                                <SimpleLineIcons
+                                    style={styles.icon2}
+                                    name="lock"
+                                    size={20}
+                                    color={"#888"}
+                                />
                             </View>
-                        )}
-                        <TouchableOpacity
-                            onPress={() => router.push({ pathname: "/logincode/index" })}
-                        >
-                            <Text
-                                style={[
-                                    styles.forgotSection,
-                                    { fontFamily: "Nunito_600SemiBold" },
-                                ]}
-                            >
-                                Quên mật khẩu?
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{
-                                padding: 16,
-                                borderRadius: 8,
-                                marginHorizontal: 16,
-                                backgroundColor: "#2467EC",
-                                marginTop: 15
-                            }}
-                            onPress={() => OnHandleSignIn()}
-                        >
-                            {buttonSpinner ? (
-                                <ActivityIndicator size="small" color={"#fff"} />
-                            ) : (
-                                <Text
-                                    style={{
-                                        color: "#fff",
-                                        textAlign: "center",
-                                        fontSize: 16,
-                                        fontFamily: "Raleway_700Bold"
-                                    }}
-                                >
-                                    Đăng nhập
-                                </Text>
+                            {error.password !== '' && (
+                                <View style={[commonStyles.errorContainer, { top: 82 }]}>
+                                    <Entypo name="cross" size={18} color={"red"} />
+                                    <Text style={{ color: "red", fontSize: 11, marginTop: -1 }}>
+                                        {error.password}
+                                    </Text>
+                                </View>
                             )}
-                        </TouchableOpacity>
-                        <View style={styles.signUpRedirect}>
-                            <Text style={{ fontSize: 18, fontFamily: "Raleway_600SemiBold" }}>
-                                Không có tài khoản?
-                            </Text>
                             <TouchableOpacity
-                                onPress={() => router.push({ pathname: "/sign-up/index" })}
+                                onPress={() => router.push({ pathname: "/forget-password" })}
                             >
                                 <Text
-                                    style={{
-                                        fontSize: 18,
-                                        fontFamily: "Raleway_600SemiBold",
-                                        color: "#2467EC",
-                                        marginLeft: 5,
-                                    }}
+                                    style={styles.forgotSection}
                                 >
-                                    Đăng ký
+                                    Quên mật khẩu?
                                 </Text>
                             </TouchableOpacity>
-                        </View>
+                            <Animated.View entering={SlideInLeft.duration(1000).delay(1000)}>
+                                <TouchableOpacity
+                                    style={styles.button}
+                                    onPress={() => OnHandleSignIn()}
+                                >
+                                    <LinearGradient
+                                        colors={["#2467EC", "#1E4E9E"]}
+                                        style={{ padding: 16, borderRadius: 12 }}
+                                    >
+                                        {buttonSpinner ? (
+                                            <ActivityIndicator size="small" color={"#fff"} />
+                                        ) : (
+                                            <Text style={styles.buttonText}>
+                                                Đăng nhập
+                                            </Text>
+                                        )}
+                                    </LinearGradient>
+                                </TouchableOpacity>
+                            </Animated.View>
+                            <View style={styles.signUpRedirect}>
+                                <Text style={{ fontSize: 16, fontFamily: "Nunito_500Medium", color: "#666" }}>
+                                    Không có tài khoản?
+                                </Text>
+                                <TouchableOpacity
+                                    onPress={() => router.push({ pathname: "/sign-up" })}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            fontFamily: "Nunito_600SemiBold",
+                                            color: "#2467EC",
+                                            marginLeft: 5,
+                                        }}
+                                    >
+                                        Đăng ký
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </Animated.View>
                     </View>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+                </ScrollView>
+            </SafeAreaView>
+        </LinearGradient>
     )
 }
-
-export default SignInScreen;
