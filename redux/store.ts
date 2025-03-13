@@ -13,3 +13,13 @@ export const store = configureStore({
       getDefaultMiddleware().concat(apiSlice.middleware),
   });
 
+// gọi load user mỗi khi trang được tải
+const initializeApp = async () => {
+  await store.dispatch(
+    //đảm bảo thông tin người dùng được cập nhật mới nhất
+    //bỏ qua cache và thực hiện lại yêu cầu tới server
+    apiSlice.endpoints.loadUser.initiate({}, { forceRefetch: true })
+  );
+};
+
+initializeApp();
