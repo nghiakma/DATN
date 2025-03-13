@@ -163,9 +163,7 @@ const SignUpScreen = () => {
                 console.log(response);
                 if (response.data) {
                     await AsyncStorage.setItem("activation_token", response.data.activationToken);
-                    Toast.show(response.data.message, {
-                        type: 'success'
-                    });
+                   
                 }
                
                 setUserInfo({ ...userInfo, name: "", email: "", password: "" });

@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         padding: 16,
         borderRadius: 12,
         marginHorizontal: 16,
-        marginTop: 20,
+        marginTop: 10,
         overflow: "hidden",
     },
     buttonText: {
@@ -133,12 +133,11 @@ export default function SignInScreen() {
                 const response = await login({ email, password }).unwrap();
                 console.log(response);
                 
-                opacity.value = withTiming(0, { duration: 500 });
-               scale.value = withTiming(0.8, { duration: 500 });
-               rotate.value = withTiming("-10deg", { duration: 500 }, () => {
+               
+               
             // Khi animation hoàn thành, chuyển trang
-            runOnJS(router.push)("/home-screen");
-        });
+            router.push("/home-screen");
+       
             
             }
         } catch (error) {
