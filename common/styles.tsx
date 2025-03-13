@@ -29,7 +29,7 @@ export const commonStyles = StyleSheet.create({
         marginHorizontal: 5,
         height: responsiveHeight(2.5),
         width: responsiveWidth(2.5),
-        backgroundColor: "#2467Ec"
+        backgroundColor: "#6200EE"
     },
     title: {
         fontSize: hp("2.5%"),
