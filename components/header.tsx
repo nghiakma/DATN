@@ -1,12 +1,18 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Raleway_700Bold } from "@expo-google-fonts/raleway";
 import { useFonts } from "expo-font";
 import { URL_IMAGES } from '@/utils/url';
 import { useSelector } from 'react-redux';
+import { Feather } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { useGetCartOfUserQuery } from '@/redux/cart/cartApi';
+
 
 export default function HeaderComponent() {
 
+    const { data, error, isLoading } = useGetCartOfUserQuery({});
+    console.log(data);
     const [avatar, setAvatar] = useState('');
     const user = useSelector((state: any) => state.auth.user);
     console.log(user)
@@ -20,6 +26,23 @@ export default function HeaderComponent() {
     useEffect(() => {
         setAvatar(user.userInfo.avatarUrl);
     }, [user]);
+
+    if (isLoading) {
+        return (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text>Loading...</Text>
+          </View>
+        );
+      }
+    
+      if (error) {
+        return (
+          <View style={styles.errorContainer}>
+            <Text>Error: {error.toString()}</Text>
+          </View>
+        );
+      }
   return (
     <View style={styles.container}>
       <View style={styles.headerWrapper}>
@@ -38,6 +61,17 @@ export default function HeaderComponent() {
                 </Text>
             </View>
       </View>
+      <TouchableOpacity
+                style={styles.bellButton}
+                onPress={() => router.push("/(routes)/cart")}
+            >
+                <Feather name="shopping-bag" size={26} color={"black"} />
+                <View style={styles.bellContainer}>
+                    <Text style={{ color: "#fff", fontSize: 14 }}>
+                        {data?.length > 0 ? data.length : 0}
+                    </Text>
+                </View>
+            </TouchableOpacity>
     </View>
   )
 }
@@ -56,6 +90,17 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
+
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
 
     image: {
         width: 45,
