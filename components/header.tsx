@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Raleway_700Bold } from "@expo-google-fonts/raleway";
 import { useFonts } from "expo-font";
 import { URL_IMAGES } from '@/utils/url';
@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 
 export default function HeaderComponent() {
 
+    const [avatar, setAvatar] = useState('');
     const user = useSelector((state: any) => state.auth.user);
     console.log(user)
     let [fontsLoaded, fontsError] = useFonts({
@@ -16,6 +17,9 @@ export default function HeaderComponent() {
     if (!fontsLoaded && !fontsError) {
         return null;
     }
+    useEffect(() => {
+        setAvatar(user.userInfo.avatarUrl);
+    }, [user]);
   return (
     <View style={styles.container}>
       <View style={styles.headerWrapper}>
